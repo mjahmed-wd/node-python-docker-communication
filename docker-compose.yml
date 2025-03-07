@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  python-app:
+    build: ./python-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./python-app:/app
+      - ./file:/app/file
+    container_name: python-fastapi-app
+    restart: unless-stopped
+    command: uvicorn app:app --host 0.0.0.0 --port 5000 --reload
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  node-app:
+    build: ./node-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./node-app:/app
+      - ./file:/app/file
+      - /app/node_modules
+    depends_on:
+      - python-app
+    container_name: node-express-app
+    restart: unless-stopped
+    command: npm run dev
+    environment:
+      - NODE_ENV=development 
