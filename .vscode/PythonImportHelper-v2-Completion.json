@@ -82,21 +82,36 @@
         "documentation": {}
     },
     {
+        "label": "extract_images_from_pdf",
+        "importPath": "utils.image_extractor",
+        "description": "utils.image_extractor",
+        "isExtraImport": true,
+        "detail": "utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "StaticFiles",
+        "importPath": "fastapi.staticfiles",
+        "description": "fastapi.staticfiles",
+        "isExtraImport": true,
+        "detail": "fastapi.staticfiles",
+        "documentation": {}
+    },
+    {
+        "label": "StaticFiles",
+        "importPath": "fastapi.staticfiles",
+        "description": "fastapi.staticfiles",
+        "isExtraImport": true,
+        "detail": "fastapi.staticfiles",
+        "documentation": {}
+    },
+    {
         "label": "fitz",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "fitz",
         "description": "fitz",
         "detail": "fitz",
-        "documentation": {}
-    },
-    {
-        "label": "os,",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os.",
-        "description": "os.",
-        "detail": "os.",
         "documentation": {}
     },
     {
@@ -113,31 +128,6 @@
         "description": "PIL",
         "isExtraImport": true,
         "detail": "PIL",
-        "documentation": {}
-    },
-    {
-        "label": "ImageChops",
-        "importPath": "PIL",
-        "description": "PIL",
-        "isExtraImport": true,
-        "detail": "PIL",
-        "documentation": {}
-    },
-    {
-        "label": "base64",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "base64",
-        "description": "base64",
-        "detail": "base64",
-        "documentation": {}
-    },
-    {
-        "label": "BytesIO",
-        "importPath": "io",
-        "description": "io",
-        "isExtraImport": true,
-        "detail": "io",
         "documentation": {}
     },
     {
@@ -219,21 +209,30 @@
         "documentation": {}
     },
     {
+        "label": "extract_images",
+        "kind": 2,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "def extract_images(request: PdfRequest):\n    \"\"\"\n    Endpoint to extract visualization images from PDF files\n    This endpoint extracts various visualization images from a PDF file,\n    saves them to the local filesystem, and returns URLs to access them.\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path\n        # Handle relative paths correctly inside the container\n        if not pdf_path.startswith('/'):",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_image_description",
+        "kind": 2,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "def get_image_description(image_type):\n    \"\"\"\n    Return a human-readable description of the image type\n    \"\"\"\n    descriptions = {\n        \"gray_scale\": \"Grayscale visualization of the visual field test\",\n        \"sensitivity_values\": \"Numerical sensitivity values across the visual field\",\n        \"total_deviation_values\": \"Total deviation values showing differences from normal values\",\n        \"pattern_deviation_values\": \"Pattern deviation values showing localized defects\",\n        \"td_probability_values\": \"Total deviation probability values indicating statistical significance\",",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
         "label": "router",
         "kind": 5,
         "importPath": "python-app.routes.pdf_routes",
         "description": "python-app.routes.pdf_routes",
         "peekOfCode": "router = APIRouter()\nclass PdfRequest(BaseModel):\n    pdf_path: str\n@router.post(\"/convert-pdf\")\ndef convert_pdf(request: PdfRequest):\n    \"\"\"\n    Endpoint to convert PDF to image\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path",
         "detail": "python-app.routes.pdf_routes",
-        "documentation": {}
-    },
-    {
-        "label": "convert_to_base64",
-        "kind": 2,
-        "importPath": "python-app.utils.image_extractor",
-        "description": "python-app.utils.image_extractor",
-        "peekOfCode": "def convert_to_base64(image):\n    # Buffer for byte data\n    buffered = BytesIO()\n    image.save(buffered, format=\"PNG\")\n    return base64.b64encode(buffered.getvalue())\ndef convert_pdf2img(input_file: str):\n    # Open the document\n    pdfIn = fitz.open(input_file)\n    # Select a page\n    page = pdfIn[0]",
-        "detail": "python-app.utils.image_extractor",
         "documentation": {}
     },
     {
@@ -318,11 +317,11 @@
         "documentation": {}
     },
     {
-        "label": "generate_response",
+        "label": "extract_images_from_pdf",
         "kind": 2,
         "importPath": "python-app.utils.image_extractor",
         "description": "python-app.utils.image_extractor",
-        "peekOfCode": "def generate_response(document, output_path):\n    # Converting pdf to img\n    pixData = convert_pdf2img(pdf_file)\n    # Ensure output_path ends with a slash\n    if not output_path.endswith('/'):\n        output_path = output_path + '/'\n    # image Data storing in a json\n    # imageData = {}\n    # fetching base64 formatted data in a dictionary\n    # imageData[\"gray_scale_image\"] = get_gray_scale(pixData)",
+        "peekOfCode": "def extract_images_from_pdf(pdf_file, output_path):\n    \"\"\"\n    Extract images from a PDF file and save them to the specified output path.\n    Returns information about the extracted images.\n    \"\"\"\n    # Make sure output directory exists\n    os.makedirs(output_path, exist_ok=True)\n    # Converting pdf to img\n    pixData = convert_pdf2img(pdf_file)\n    # Dictionary to store image information",
         "detail": "python-app.utils.image_extractor",
         "documentation": {}
     },
@@ -358,7 +357,16 @@
         "kind": 5,
         "importPath": "python-app.main",
         "description": "python-app.main",
-        "peekOfCode": "app = FastAPI(title=\"PDF Processing API\")\n# Add CORS middleware\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n# Root endpoint",
+        "peekOfCode": "app = FastAPI(title=\"PDF Processing API\")\n# Add CORS middleware\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n# Define the static files directory",
+        "detail": "python-app.main",
+        "documentation": {}
+    },
+    {
+        "label": "static_dir",
+        "kind": 5,
+        "importPath": "python-app.main",
+        "description": "python-app.main",
+        "peekOfCode": "static_dir = \"/app/static\"\n# Create the directory if it doesn't exist\nos.makedirs(static_dir, exist_ok=True)\n# Mount the static files directory\napp.mount(\"/static\", StaticFiles(directory=static_dir), name=\"static\")\n# Root endpoint\n@app.get(\"/\")\ndef read_root():\n    return {\"message\": \"Hello from Python FastAPI!\"}\n# Register routers",
         "detail": "python-app.main",
         "documentation": {}
     }

@@ -101,4 +101,69 @@ router.post('/extract-text', async (req, res) => {
   }
 });
 
+/**
+ * Endpoint to extract visualization images from PDF
+ * Expects a JSON body with { "pdfPath": "path/to/pdf" }
+ * Returns URLs to access the extracted images
+ */
+router.post('/extract-images', async (req, res) => {
+  try {
+    const { pdfPath } = req.body;
+    
+    if (!pdfPath) {
+      return res.status(400).json({ error: 'PDF path is required' });
+    }
+    
+    // Make a request to the Python FastAPI service
+    const pythonResponse = await axios.post('http://python-app:5000/api/extract-images', {
+      pdf_path: pdfPath
+    });
+    
+    const responseData = pythonResponse.data;
+    
+    // Check if the Python service encountered an error
+    if (responseData.error) {
+      return res.status(422).json({
+        success: false,
+        error: responseData.error,
+        message: 'Error extracting images from PDF'
+      });
+    }
+    
+    // Transform the Python static URLs to be accessible through the Node.js app
+    if (responseData.data && responseData.data.images) {
+      responseData.data.images = responseData.data.images.map(image => {
+        // Replace /static/ with /python-static/ to match our proxy setup
+        const nodeUrl = image.url.replace('/static/', '/python-static/');
+        return {
+          ...image,
+          url: nodeUrl
+        };
+      });
+    }
+    
+    // Return the image data from the Python service with updated URLs
+    return res.json({
+      success: true,
+      data: responseData.data,
+      message: responseData.message
+    });
+  } catch (error) {
+    console.error('Error extracting images from PDF:', error.message);
+    
+    // If the error comes from the Python service, forward its response
+    if (error.response && error.response.data) {
+      return res.status(error.response.status || 500).json({
+        success: false,
+        error: error.response.data.detail || 'Error extracting images from PDF'
+      });
+    }
+    
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Failed to extract images from PDF'
+    });
+  }
+});
+
 module.exports = router; 

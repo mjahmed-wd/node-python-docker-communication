@@ -1,19 +1,10 @@
 #!/usr/bin/env python3
 import fitz
-import os, io
-from PIL import Image, ImageDraw, ImageChops
-import base64
-from io import BytesIO
+import os
+from PIL import Image, ImageDraw
 import json
 import sys
-import os
-
-
-def convert_to_base64(image):
-    # Buffer for byte data
-    buffered = BytesIO()
-    image.save(buffered, format="PNG")
-    return base64.b64encode(buffered.getvalue())
+import time
 
 
 def convert_pdf2img(input_file: str):
@@ -28,11 +19,7 @@ def convert_pdf2img(input_file: str):
 
     mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)
     pix = page.get_pixmap(matrix=mat, alpha=False)
-    # output_file = f"{os.path.splitext(os.path.basename(input_file))[0]}.png"
-    # pix.save(output_file)
     image_data = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-    # image_data.show(image_data)
-    # print(image_data)
     pdfIn.close()
 
     return image_data
@@ -57,16 +44,14 @@ def get_gray_scale(img, output_path: str):
     
     flag = None
     try:
-        imagePath = output_path+'gray_scale_image.png'
+        imagePath = os.path.join(output_path, 'gray_scale_image.png')
         img_cropped.save(imagePath)
         flag = True
-    except ValueError:
-        print("STOP:",ValueError)
+    except ValueError as e:
+        print(f"Error saving gray scale image: {e}")
         flag = False
 
-    return flag
-    # gray_scale_image = str(convert_to_base64(img_cropped))
-    # return gray_scale_image
+    return flag, 'gray_scale_image.png'
 
 
 def get_sensitivity_values(img, output_path: str):
@@ -88,14 +73,14 @@ def get_sensitivity_values(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"sensitivity_values_image.png")
+        imagePath = os.path.join(output_path, "sensitivity_values_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving sensitivity values image: {e}")
         flag = False
 
-    return flag
-    # sensitivity_values_image = str(convert_to_base64(img_cropped))
-    # return sensitivity_values_image
+    return flag, 'sensitivity_values_image.png'
 
 
 def get_total_deviation_values(img, output_path: str):
@@ -117,13 +102,13 @@ def get_total_deviation_values(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"total_deviation_values_image.png")
+        imagePath = os.path.join(output_path, "total_deviation_values_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving total deviation values image: {e}")
         flag = False
-    return flag
-    # total_deviation_values_image = str(convert_to_base64(img_cropped))
-    # return total_deviation_values_image
+    return flag, 'total_deviation_values_image.png'
 
 
 def get_pattern_deviation_values(img, output_path: str):
@@ -145,13 +130,13 @@ def get_pattern_deviation_values(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"pattern_deviation_values_image.png")
+        imagePath = os.path.join(output_path, "pattern_deviation_values_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving pattern deviation values image: {e}")
         flag = False
-    return flag
-    # pattern_deviation_values_image = str(convert_to_base64(img_cropped))
-    # return pattern_deviation_values_image
+    return flag, 'pattern_deviation_values_image.png'
 
 
 def get_td_probability_values(img, output_path: str):
@@ -173,13 +158,13 @@ def get_td_probability_values(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"TD_probability_values_image.png")
+        imagePath = os.path.join(output_path, "TD_probability_values_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving TD probability values image: {e}")
         flag = False
-    return flag
-    # TD_probability_values_image = str(convert_to_base64(img_cropped))
-    # return TD_probability_values_image
+    return flag, 'TD_probability_values_image.png'
 
 
 def get_pd_probability_values(img, output_path: str):
@@ -201,13 +186,13 @@ def get_pd_probability_values(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"PD_probability_values_image.png")
+        imagePath = os.path.join(output_path, "PD_probability_values_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving PD probability values image: {e}")
         flag = False
-    return flag
-    # PD_probability_values_image = str(convert_to_base64(img_cropped))
-    # return PD_probability_values_image
+    return flag, 'PD_probability_values_image.png'
 
 
 def get_legend(img, output_path: str):
@@ -232,13 +217,13 @@ def get_legend(img, output_path: str):
     
     flag = None
     try:
-        img_cropped.save(output_path+"legend_image.png")
+        imagePath = os.path.join(output_path, "legend_image.png")
+        img_cropped.save(imagePath)
         flag = True
-    except:
+    except Exception as e:
+        print(f"Error saving legend image: {e}")
         flag = False
-    return flag
-    # legend_image = str(convert_to_base64(img_cropped))
-    # return legend_image
+    return flag, 'legend_image.png'
 
 
 def trim_whitespace(image):
@@ -287,53 +272,50 @@ def trim_whitespace(image):
     return image.crop((min_x, min_y, max_x, max_y))
 
 
-def generate_response(document, output_path):
-
+def extract_images_from_pdf(pdf_file, output_path):
+    """
+    Extract images from a PDF file and save them to the specified output path.
+    Returns information about the extracted images.
+    """
+    # Make sure output directory exists
+    os.makedirs(output_path, exist_ok=True)
+    
     # Converting pdf to img
     pixData = convert_pdf2img(pdf_file)
-
-    # Ensure output_path ends with a slash
-    if not output_path.endswith('/'):
-        output_path = output_path + '/'
-
-    # image Data storing in a json
-    # imageData = {}
-
-    # fetching base64 formatted data in a dictionary
-    # imageData["gray_scale_image"] = get_gray_scale(pixData)
-    # imageData["sensitivity_values_image"] = get_sensitivity_values(pixData)
-    # imageData["total_deviation_values_image"] = get_total_deviation_values(pixData)
-    # imageData["pattern_deviation_values_image"] = get_pattern_deviation_values(pixData)
-    # imageData["TD_probability_values_image"] = get_td_probability_values(pixData)
-    # imageData["PD_probability_values_image"] = get_pd_probability_values(pixData)
-    # imageData["legend_image"] = get_legend(pixData)
-
-    gray_scale_image_response = get_gray_scale(pixData, output_path)
-    sensitivity_values_image_response = get_sensitivity_values(pixData, output_path)
-    total_deviation_values_image_response = get_total_deviation_values(pixData, output_path)
-    pattern_deviation_values_image_response = get_pattern_deviation_values(pixData, output_path)
-    TD_probability_values_image_response = get_td_probability_values(pixData, output_path)
-    PD_probability_values_image_response = get_pd_probability_values(pixData, output_path)
-    legend_image_response = get_legend(pixData, output_path)
-    # Creating a response
-    if gray_scale_image_response and sensitivity_values_image_response and total_deviation_values_image_response and \
-                pattern_deviation_values_image_response and TD_probability_values_image_response and PD_probability_values_image_response \
-                and legend_image_response: 
-        # status = True
-        # data = {"gray_scale_image": get_gray_scale(pixData)}
-        # arrData = []
-        # for image in imageData:
-        #     tempDict = {}
-        #     tempDict[image] = imageData[image]
-        #     arrData.append(tempDict)
-
-        response = {'status': True, 'data': None}
-        response = "[(1)]" + json.dumps(response)
-        return response
-    else:
-        response = {'status': False, 'data': None}
-        response = "[(0)]" + json.dumps(response)
-        return response
+    
+    # Dictionary to store image information
+    image_info = {
+        "images": []
+    }
+    
+    # Extract all image types
+    extraction_functions = [
+        ("gray_scale", get_gray_scale),
+        ("sensitivity_values", get_sensitivity_values),
+        ("total_deviation_values", get_total_deviation_values),
+        ("pattern_deviation_values", get_pattern_deviation_values),
+        ("td_probability_values", get_td_probability_values),
+        ("pd_probability_values", get_pd_probability_values),
+        ("legend", get_legend)
+    ]
+    
+    all_successful = True
+    
+    for image_type, extraction_func in extraction_functions:
+        success, filename = extraction_func(pixData, output_path)
+        if not success:
+            all_successful = False
+        
+        image_info["images"].append({
+            "type": image_type,
+            "filename": filename,
+            "path": os.path.join(output_path, filename),
+            "success": success
+        })
+    
+    image_info["status"] = all_successful
+    
+    return image_info
 
 
 if __name__ == "__main__":
@@ -351,7 +333,7 @@ if __name__ == "__main__":
         os.makedirs(output_path)
 
     # Get response
-    res = generate_response(pdf_file, output_path)
+    res = extract_images_from_pdf(pdf_file, output_path)
     print(res)
 
     # for data in res.keys():

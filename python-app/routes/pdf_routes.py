@@ -4,9 +4,9 @@ from pdf2image import convert_from_path
 import os
 import time
 from pydantic import BaseModel
-# Using the alternative text extractor that doesn't rely on PyMuPDF
-# from utils.text_extractor_alt import extract_text_from_pdf
 from utils.text_extractor import get_text_from_pdf, convert_pdf_to_txt
+from utils.image_extractor import extract_images_from_pdf
+from fastapi.staticfiles import StaticFiles
 
 router = APIRouter()
 
@@ -134,4 +134,82 @@ def extract_text(request: PdfRequest):
                 "text": {}
             },
             "message": f"Error extracting text from PDF: {str(e)}"
-        } 
+        }
+
+@router.post("/extract-images")
+def extract_images(request: PdfRequest):
+    """
+    Endpoint to extract visualization images from PDF files
+    
+    This endpoint extracts various visualization images from a PDF file,
+    saves them to the local filesystem, and returns URLs to access them.
+    """
+    try:
+        pdf_path = request.pdf_path
+        
+        # Handle relative paths correctly inside the container
+        if not pdf_path.startswith('/'):
+            actual_path = os.path.join('/app', pdf_path)
+        else:
+            actual_path = pdf_path
+        
+        print(f"Looking for PDF at: {actual_path}")
+        
+        # Check if the file exists
+        if not os.path.exists(actual_path):
+            raise HTTPException(status_code=404, detail=f"PDF file not found: {pdf_path} (resolved to {actual_path})")
+        
+        # Create a unique directory for this extraction within the static folder
+        timestamp = int(time.time())
+        extraction_dir = f"extracted_images_{timestamp}"
+        output_dir = os.path.join('/app/static', extraction_dir)
+        
+        # Extract images from the PDF
+        result = extract_images_from_pdf(actual_path, output_dir)
+        
+        # Generate URLs for each image
+        base_url = f"/static/{extraction_dir}"
+        images_with_urls = []
+        
+        for image in result["images"]:
+            if image["success"]:
+                image_url = f"{base_url}/{image['filename']}"
+                images_with_urls.append({
+                    "type": image["type"],
+                    "url": image_url,
+                    "filename": image["filename"],
+                    "description": get_image_description(image["type"])
+                })
+        
+        return {
+            "data": {
+                "images": images_with_urls,
+                "pdf_path": actual_path,
+                "extraction_time": timestamp
+            },
+            "message": "Images successfully extracted" if result["status"] else "Some images could not be extracted"
+        }
+    
+    except Exception as e:
+        return {
+            "data": {
+                "images": []
+            },
+            "message": f"Error extracting images from PDF: {str(e)}"
+        }
+
+def get_image_description(image_type):
+    """
+    Return a human-readable description of the image type
+    """
+    descriptions = {
+        "gray_scale": "Grayscale visualization of the visual field test",
+        "sensitivity_values": "Numerical sensitivity values across the visual field",
+        "total_deviation_values": "Total deviation values showing differences from normal values",
+        "pattern_deviation_values": "Pattern deviation values showing localized defects",
+        "td_probability_values": "Total deviation probability values indicating statistical significance",
+        "pd_probability_values": "Pattern deviation probability values indicating statistical significance",
+        "legend": "Legend explaining symbols and color codes used in the visualizations"
+    }
+    
+    return descriptions.get(image_type, "Visual field test image") 
