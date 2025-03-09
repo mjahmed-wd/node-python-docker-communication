@@ -1,0 +1,365 @@
+[
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "JSONResponse",
+        "importPath": "fastapi.responses",
+        "description": "fastapi.responses",
+        "isExtraImport": true,
+        "detail": "fastapi.responses",
+        "documentation": {}
+    },
+    {
+        "label": "convert_from_path",
+        "importPath": "pdf2image",
+        "description": "pdf2image",
+        "isExtraImport": true,
+        "detail": "pdf2image",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "get_text_from_pdf",
+        "importPath": "utils.text_extractor",
+        "description": "utils.text_extractor",
+        "isExtraImport": true,
+        "detail": "utils.text_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "convert_pdf_to_txt",
+        "importPath": "utils.text_extractor",
+        "description": "utils.text_extractor",
+        "isExtraImport": true,
+        "detail": "utils.text_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "fitz",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fitz",
+        "description": "fitz",
+        "detail": "fitz",
+        "documentation": {}
+    },
+    {
+        "label": "os,",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os.",
+        "description": "os.",
+        "detail": "os.",
+        "documentation": {}
+    },
+    {
+        "label": "Image",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "ImageDraw",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "ImageChops",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "base64",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "base64",
+        "description": "base64",
+        "detail": "base64",
+        "documentation": {}
+    },
+    {
+        "label": "BytesIO",
+        "importPath": "io",
+        "description": "io",
+        "isExtraImport": true,
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "importPath": "main",
+        "description": "main",
+        "isExtraImport": true,
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "importPath": "routes.pdf_routes",
+        "description": "routes.pdf_routes",
+        "isExtraImport": true,
+        "detail": "routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "PdfRequest",
+        "kind": 6,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "class PdfRequest(BaseModel):\n    pdf_path: str\n@router.post(\"/convert-pdf\")\ndef convert_pdf(request: PdfRequest):\n    \"\"\"\n    Endpoint to convert PDF to image\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path\n        # Handle relative paths correctly inside the container",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "convert_pdf",
+        "kind": 2,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "def convert_pdf(request: PdfRequest):\n    \"\"\"\n    Endpoint to convert PDF to image\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path\n        # Handle relative paths correctly inside the container\n        # If the path doesn't start with /, assume it's relative to /app\n        if not pdf_path.startswith('/'):\n            actual_path = os.path.join('/app', pdf_path)",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "extract_text",
+        "kind": 2,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "def extract_text(request: PdfRequest):\n    \"\"\"\n    Endpoint to extract text and patient details from PDF\n    This endpoint extracts both structured patient data and raw text from a PDF file.\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path\n        # Handle relative paths correctly inside the container\n        if not pdf_path.startswith('/'):\n            actual_path = os.path.join('/app', pdf_path)",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "python-app.routes.pdf_routes",
+        "description": "python-app.routes.pdf_routes",
+        "peekOfCode": "router = APIRouter()\nclass PdfRequest(BaseModel):\n    pdf_path: str\n@router.post(\"/convert-pdf\")\ndef convert_pdf(request: PdfRequest):\n    \"\"\"\n    Endpoint to convert PDF to image\n    \"\"\"\n    try:\n        pdf_path = request.pdf_path",
+        "detail": "python-app.routes.pdf_routes",
+        "documentation": {}
+    },
+    {
+        "label": "convert_to_base64",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def convert_to_base64(image):\n    # Buffer for byte data\n    buffered = BytesIO()\n    image.save(buffered, format=\"PNG\")\n    return base64.b64encode(buffered.getvalue())\ndef convert_pdf2img(input_file: str):\n    # Open the document\n    pdfIn = fitz.open(input_file)\n    # Select a page\n    page = pdfIn[0]",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "convert_pdf2img",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def convert_pdf2img(input_file: str):\n    # Open the document\n    pdfIn = fitz.open(input_file)\n    # Select a page\n    page = pdfIn[0]\n    rotate = int(0)\n    zoom_x = 2\n    zoom_y = 2\n    mat = fitz.Matrix(zoom_x, zoom_y).prerotate(rotate)\n    pix = page.get_pixmap(matrix=mat, alpha=False)",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_gray_scale",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_gray_scale(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((653, 430, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 382, 390), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_sensitivity_values",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_sensitivity_values(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((245, 425, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 382, 390), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_total_deviation_values",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_total_deviation_values(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((121, 761, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 260, 270), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_pattern_deviation_values",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_pattern_deviation_values(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((487, 762, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 260, 270), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_td_probability_values",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_td_probability_values(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((125, 1046, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 260, 270), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_pd_probability_values",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_pd_probability_values(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    img_cropped = img.crop((493, 1046, x+height, height))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    mask_draw.ellipse((0, 0, 260, 270), fill=255)\n    # add mask as alpha channel",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_legend",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def get_legend(img, output_path: str):\n    # crop image\n    width, height = img.size\n    x = (width - height)//2\n    # Adjusting crop coordinates to better focus on the legend content\n    img_cropped = img.crop((1010, 1185, 1010 + 130, 1185 + 130))\n    # create grayscale image\n    mask = Image.new('L', img_cropped.size)\n    mask_draw = ImageDraw.Draw(mask)\n    # Using rectangle",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "trim_whitespace",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def trim_whitespace(image):\n    \"\"\"\n    Trims the whitespace around an image to only keep the content.\n    Args:\n        image: PIL Image object\n    Returns:\n        Trimmed PIL Image object\n    \"\"\"\n    # Make sure the image is in RGBA mode for alpha channel\n    if image.mode != 'RGBA':",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "generate_response",
+        "kind": 2,
+        "importPath": "python-app.utils.image_extractor",
+        "description": "python-app.utils.image_extractor",
+        "peekOfCode": "def generate_response(document, output_path):\n    # Converting pdf to img\n    pixData = convert_pdf2img(pdf_file)\n    # Ensure output_path ends with a slash\n    if not output_path.endswith('/'):\n        output_path = output_path + '/'\n    # image Data storing in a json\n    # imageData = {}\n    # fetching base64 formatted data in a dictionary\n    # imageData[\"gray_scale_image\"] = get_gray_scale(pixData)",
+        "detail": "python-app.utils.image_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "convert_pdf_to_txt",
+        "kind": 2,
+        "importPath": "python-app.utils.text_extractor",
+        "description": "python-app.utils.text_extractor",
+        "peekOfCode": "def convert_pdf_to_txt(file_path):\n    doc = fitz.open(file_path)  # open document\n    output_txt = b\"\"  # initialize as bytes\n    for page in doc:  # iterate the document pages\n        # get plain text and encode to UTF-8 bytes\n        page_text = page.get_text().encode(\"utf8\")\n        output_txt += page_text\n        # Add a page delimiter\n        output_txt += bytes((12,))  # form feed character as page delimiter\n    return output_txt",
+        "detail": "python-app.utils.text_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "get_text_from_pdf",
+        "kind": 2,
+        "importPath": "python-app.utils.text_extractor",
+        "description": "python-app.utils.text_extractor",
+        "peekOfCode": "def get_text_from_pdf(lines):\n    patient_details = {\n        \"Patient\": None,\n        \"Date of Birth\": None,\n        \"Gender\": None,\n        \"Patient ID\": None,\n        \"Office Location\": None,\n        \"Test Type\": None,\n        \"Created\": None,\n        \"Fixation Monitor\": None,",
+        "detail": "python-app.utils.text_extractor",
+        "documentation": {}
+    },
+    {
+        "label": "read_root",
+        "kind": 2,
+        "importPath": "python-app.main",
+        "description": "python-app.main",
+        "peekOfCode": "def read_root():\n    return {\"message\": \"Hello from Python FastAPI!\"}\n# Register routers\napp.include_router(pdf_router, prefix=\"/api\", tags=[\"PDF Operations\"])\nif __name__ == \"__main__\":\n    import uvicorn\n    uvicorn.run(\"main:app\", host=\"0.0.0.0\", port=5000, reload=True)",
+        "detail": "python-app.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "python-app.main",
+        "description": "python-app.main",
+        "peekOfCode": "app = FastAPI(title=\"PDF Processing API\")\n# Add CORS middleware\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],\n)\n# Root endpoint",
+        "detail": "python-app.main",
+        "documentation": {}
+    }
+]

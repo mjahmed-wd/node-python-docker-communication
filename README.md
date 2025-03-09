@@ -1,54 +1,77 @@
-# Docker Compose Project
+# Node.js and Python Microservices
 
-This project demonstrates a simple web application using Docker Compose with two services:
-1. A Node.js Express server
-2. A Python Flask server
+A microservices-based application that demonstrates communication between a Node.js Express server and a Python FastAPI service.
+
+## Features
+
+- **PDF to Image Conversion**: Convert PDF files to images using Python
+- **PDF Text Extraction**: Extract structured text data from PDF files
+- **Microservices Architecture**: Separate Node.js and Python services communicating via HTTP
 
 ## Project Structure
 
 ```
 node-python/
 ├── docker-compose.yml
-├── file/
-│   └── print-preview.pdf
 ├── node-app/
-│   ├── app.js
-│   ├── package.json
-│   └── Dockerfile
-└── python-app/
-    ├── app.py
-    ├── requirements.txt
-    └── Dockerfile
+│   ├── app.js                 # Main Node.js application
+│   ├── routes/
+│   │   └── pdf-routes.js      # PDF operation routes
+│   ├── Dockerfile
+│   └── package.json
+├── python-app/
+│   ├── main.py                # Main FastAPI application
+│   ├── routes/
+│   │   └── pdf_routes.py      # PDF operation routes
+│   ├── utils/
+│   │   └── text_extractor.py  # PDF text extraction utilities
+│   ├── Dockerfile
+│   └── requirements.txt
+└── file/                      # Shared files directory
 ```
 
-## Running the Application
+## API Endpoints
 
-To start both services, run:
+### Node.js API (Express)
 
-```bash
-docker-compose up
-```
+- `GET /`: Welcome message
+- `POST /api/convert-pdf`: Convert PDF to image
+  - Request body: `{ "pdfPath": "path/to/pdf" }`
+  - Response: `{ "success": true, "imagePath": "path/to/image", "message": "PDF successfully converted to image" }`
+- `POST /api/extract-text`: Extract structured text from PDF
+  - Request body: `{ "pdfPath": "path/to/pdf" }`
+  - Response: `{ "success": true, "data": { "status": true, "data": { ... patient details ... } }, "message": "PDF text successfully extracted" }`
 
-To build and start in detached mode:
+### Python API (FastAPI)
 
-```bash
-docker-compose up --build -d
-```
+- `GET /`: Welcome message
+- `POST /api/convert-pdf`: Convert PDF to image
+  - Request body: `{ "pdf_path": "path/to/pdf" }`
+  - Response: `{ "image_path": "path/to/image" }`
+- `POST /api/extract-text`: Extract text from PDF
+  - Request body: `{ "pdf_path": "path/to/pdf" }`
+  - Response: `{ "status": true, "data": { ... patient details ... } }`
 
-## Services
+## Getting Started
 
-### Node.js Express Server
-- URL: http://localhost:3000
-- Returns: "Hello from Node.js!"
+1. Clone the repository
+2. Run the services with Docker Compose:
+   ```bash
+   docker-compose up
+   ```
+3. Access the Node.js API at http://localhost:3000
+4. Access the Python API at http://localhost:5000
 
-### Python Flask Server
-- URL: http://localhost:5000
-- Returns: "Hello from Python!"
+## Dependencies
 
-## Stopping the Application
+### Node.js
+- Express
+- Axios
 
-To stop the services:
-
-```bash
-docker-compose down
-``` 
+### Python
+- FastAPI
+- Uvicorn
+- PyMuPDF
+- pdf2image
+- poppler-utils
+- Pydantic 
